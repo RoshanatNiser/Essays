@@ -332,10 +332,6 @@ textarea {
             Toggle Theme
         </button>
 
-        <button onclick="exportPDF()">
-            Export PDF
-        </button>
-
     </div>
 
     <div id="content">
@@ -579,18 +575,6 @@ document.getElementById("search")
 function toggleTheme() {
 
     document.body.classList.toggle("light");
-}
-
-/* =========================================
-   PDF EXPORT
-========================================= */
-
-function exportPDF() {
-
-    const element =
-        document.getElementById("content");
-
-    html2pdf().from(element).save();
 }
 
 /* =========================================
