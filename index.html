@@ -31,9 +31,6 @@ window.MathJax = {
 
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
-<!-- PDF EXPORT -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <style>
 
 :root {
@@ -55,11 +52,15 @@ window.MathJax = {
 body {
 
     margin: 0;
+
     font-family: Arial, sans-serif;
+
     background: var(--bg);
+
     color: var(--text);
 
     display: flex;
+
     height: 100vh;
 
     overflow: hidden;
@@ -78,12 +79,16 @@ body {
     padding: 20px;
 
     border-right: 1px solid #333;
+
+    transition: transform 0.3s ease;
 }
 
-#sidebar h2 {
+.sidebar-hidden {
 
-    margin-top: 0;
+    transform: translateX(-100%);
 }
+
+/* SEARCH */
 
 #search {
 
@@ -187,6 +192,8 @@ body {
     border-bottom: 1px solid #333;
 }
 
+/* BUTTON */
+
 button {
 
     background: var(--accent);
@@ -226,6 +233,38 @@ button {
     background: var(--accent);
 }
 
+/* CONTENT */
+
+#content {
+
+    max-width: 1000px;
+
+    margin: auto;
+
+    padding: 40px;
+
+    line-height: 1.8;
+}
+
+pre {
+
+    padding: 15px;
+
+    overflow-x: auto;
+
+    border-radius: 10px;
+}
+
+img {
+
+    max-width: 100%;
+}
+
+#downloadPDFBtn {
+
+    display: none;
+}
+
 </style>
 
 </head>
@@ -250,10 +289,8 @@ button {
         placeholder="Search essays..."
     >
 
-    <!-- FILTERS -->
     <div id="filterContainer"></div>
 
-    <!-- FILES -->
     <div id="fileList"></div>
 
 </div>
@@ -264,8 +301,16 @@ button {
 
     <div id="topbar">
 
+        <button onclick="toggleSidebar()">
+            ☰ Sidebar
+        </button>
+
         <button onclick="toggleTheme()">
             Toggle Theme
+        </button>
+
+        <button id="downloadPDFBtn">
+            Download PDF
         </button>
 
     </div>
@@ -294,6 +339,8 @@ const branch = "main";
 
 const folder = "essays";
 
+const pdfFolder = "pdfs";
+
 /* =========================================
    GLOBALS
 ========================================= */
@@ -303,6 +350,8 @@ let markdownFiles = [];
 let filters = {};
 
 let currentFilter = null;
+
+let currentFile = null;
 
 /* =========================================
    FETCH MARKDOWN FILES
@@ -452,6 +501,8 @@ function renderFileList(files) {
 
 async function loadMarkdown(filename) {
 
+    currentFile = filename;
+
     const rawURL =
 `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${folder}/${filename}`;
 
@@ -468,6 +519,52 @@ async function loadMarkdown(filename) {
 
     document.getElementById("main")
         .scrollTo(0,0);
+
+    checkPDFExists(filename);
+}
+
+/* =========================================
+   CHECK PDF EXISTS
+========================================= */
+
+async function checkPDFExists(filename) {
+
+    const pdfFile =
+        filename.replace(".md",".pdf");
+
+    const pdfURL =
+`https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${pdfFolder}/${pdfFile}`;
+
+    try {
+
+        const response =
+            await fetch(pdfURL, {
+                method: "HEAD"
+            });
+
+        if(response.ok) {
+
+            const button =
+                document.getElementById("downloadPDFBtn");
+
+            button.style.display = "inline-block";
+
+            button.onclick = () => {
+
+                window.open(pdfURL, "_blank");
+            };
+
+        } else {
+
+            document.getElementById("downloadPDFBtn")
+                .style.display = "none";
+        }
+
+    } catch(error) {
+
+        document.getElementById("downloadPDFBtn")
+            .style.display = "none";
+    }
 }
 
 /* =========================================
@@ -501,6 +598,16 @@ document.getElementById("search")
 
     renderFileList(filtered);
 });
+
+/* =========================================
+   TOGGLE SIDEBAR
+========================================= */
+
+function toggleSidebar() {
+
+    document.getElementById("sidebar")
+        .classList.toggle("sidebar-hidden");
+}
 
 /* =========================================
    DARK / LIGHT MODE
