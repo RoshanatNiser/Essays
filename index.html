@@ -226,70 +226,6 @@ button {
     background: var(--accent);
 }
 
-/* CONTENT */
-
-#content {
-
-    max-width: 1000px;
-
-    margin: auto;
-
-    padding: 40px;
-
-    line-height: 1.8;
-}
-
-pre {
-
-    padding: 15px;
-
-    overflow-x: auto;
-
-    border-radius: 10px;
-}
-
-img {
-
-    max-width: 100%;
-}
-
-/* COMMENTS */
-
-#comments {
-
-    margin-top: 50px;
-
-    padding-top: 30px;
-
-    border-top: 1px solid #444;
-}
-
-.comment {
-
-    background: rgba(255,255,255,0.05);
-
-    padding: 10px;
-
-    border-radius: 8px;
-
-    margin-top: 10px;
-}
-
-textarea {
-
-    width: 100%;
-
-    height: 100px;
-
-    margin-top: 10px;
-
-    padding: 10px;
-
-    border-radius: 10px;
-
-    border: none;
-}
-
 </style>
 
 </head>
@@ -530,8 +466,6 @@ async function loadMarkdown(filename) {
 
     MathJax.typeset();
 
-    loadComments(filename);
-
     document.getElementById("main")
         .scrollTo(0,0);
 }
@@ -597,77 +531,6 @@ document.getElementById("main")
     document.getElementById("progress-bar")
         .style.width = scrolled + "%";
 });
-
-/* =========================================
-   COMMENTS
-========================================= */
-
-function loadComments(filename) {
-
-    const content =
-        document.getElementById("content");
-
-    let commentsHTML = `
-
-        <div id="comments">
-
-            <h2>Comments</h2>
-
-            <textarea
-                id="commentInput"
-                placeholder="Write a comment..."
-            ></textarea>
-
-            <button onclick="saveComment('${filename}')">
-                Post Comment
-            </button>
-
-            <div id="commentList"></div>
-
-        </div>
-    `;
-
-    content.innerHTML += commentsHTML;
-
-    const comments =
-        JSON.parse(
-            localStorage.getItem(filename) || "[]"
-        );
-
-    const commentList =
-        document.getElementById("commentList");
-
-    comments.forEach(c => {
-
-        commentList.innerHTML += `
-            <div class="comment">${c}</div>
-        `;
-    });
-}
-
-/* =========================================
-   SAVE COMMENT
-========================================= */
-
-function saveComment(filename) {
-
-    const input =
-        document.getElementById("commentInput");
-
-    const comments =
-        JSON.parse(
-            localStorage.getItem(filename) || "[]"
-        );
-
-    comments.push(input.value);
-
-    localStorage.setItem(
-        filename,
-        JSON.stringify(comments)
-    );
-
-    loadMarkdown(filename);
-}
 
 /* =========================================
    START
