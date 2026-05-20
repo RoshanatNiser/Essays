@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -35,6 +37,7 @@ window.MathJax = {
 <style>
 
 :root {
+
     --bg: #121212;
     --card: #1f1f1f;
     --text: #ffffff;
@@ -42,6 +45,7 @@ window.MathJax = {
 }
 
 .light {
+
     --bg: #f5f5f5;
     --card: #ffffff;
     --text: #111111;
@@ -49,152 +53,250 @@ window.MathJax = {
 }
 
 body {
+
     margin: 0;
     font-family: Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
+
     display: flex;
     height: 100vh;
+
     overflow: hidden;
 }
 
 /* SIDEBAR */
 
 #sidebar {
-    width: 300px;
+
+    width: 320px;
+
     background: var(--card);
+
     overflow-y: auto;
+
     padding: 20px;
+
     border-right: 1px solid #333;
 }
 
 #sidebar h2 {
+
     margin-top: 0;
 }
 
 #search {
+
     width: 100%;
+
     padding: 10px;
+
     margin-bottom: 15px;
+
     border-radius: 8px;
+
     border: none;
+
     outline: none;
 }
 
-.tag {
-    display: inline-block;
-    background: var(--accent);
-    padding: 5px 10px;
-    border-radius: 15px;
-    margin: 5px;
-    cursor: pointer;
-    font-size: 13px;
+/* FILTERS */
+
+#filterContainer {
+
+    margin-bottom: 20px;
 }
 
-.file-card {
-    background: rgba(255,255,255,0.05);
-    margin-top: 12px;
-    padding: 12px;
-    border-radius: 10px;
+.filter-btn {
+
+    display: inline-block;
+
+    background: var(--accent);
+
+    color: white;
+
+    padding: 8px 12px;
+
+    margin: 5px;
+
+    border-radius: 8px;
+
     cursor: pointer;
+
+    border: none;
+}
+
+#clearFilter {
+
+    margin-top: 10px;
+
+    width: 100%;
+}
+
+/* FILE CARD */
+
+.file-card {
+
+    background: rgba(255,255,255,0.05);
+
+    margin-top: 12px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
     transition: 0.2s;
 }
 
 .file-card:hover {
+
     transform: scale(1.02);
 }
 
 /* MAIN */
 
 #main {
+
     flex: 1;
+
     overflow-y: auto;
+
     position: relative;
 }
 
 /* TOPBAR */
 
 #topbar {
+
     position: sticky;
+
     top: 0;
+
     background: var(--card);
+
     padding: 12px 20px;
+
     display: flex;
+
     gap: 10px;
+
     z-index: 100;
+
     border-bottom: 1px solid #333;
 }
 
 button {
+
     background: var(--accent);
+
     color: white;
+
     border: none;
+
     padding: 10px 15px;
+
     border-radius: 8px;
+
     cursor: pointer;
 }
 
 /* PROGRESS BAR */
 
 #progress-container {
+
     position: fixed;
+
     top: 0;
     left: 0;
+
     width: 100%;
     height: 4px;
-    background: transparent;
+
     z-index: 9999;
 }
 
 #progress-bar {
+
     height: 100%;
+
     width: 0%;
+
     background: var(--accent);
 }
 
 /* CONTENT */
 
 #content {
+
     max-width: 1000px;
+
     margin: auto;
+
     padding: 40px;
+
     line-height: 1.8;
 }
 
 pre {
+
     padding: 15px;
+
     overflow-x: auto;
+
     border-radius: 10px;
+}
+
+img {
+
+    max-width: 100%;
 }
 
 /* COMMENTS */
 
 #comments {
+
     margin-top: 50px;
+
     padding-top: 30px;
+
     border-top: 1px solid #444;
 }
 
 .comment {
+
     background: rgba(255,255,255,0.05);
+
     padding: 10px;
+
     border-radius: 8px;
+
     margin-top: 10px;
 }
 
 textarea {
+
     width: 100%;
+
     height: 100px;
+
     margin-top: 10px;
+
     padding: 10px;
+
     border-radius: 10px;
+
     border: none;
 }
 
 </style>
+
 </head>
 
 <body>
+
+<!-- PROGRESS BAR -->
 
 <div id="progress-container">
     <div id="progress-bar"></div>
@@ -206,15 +308,16 @@ textarea {
 
     <h2>Essay Library</h2>
 
-    <input type="text" id="search" placeholder="Search essays...">
+    <input
+        type="text"
+        id="search"
+        placeholder="Search essays..."
+    >
 
-    <div>
-        <span class="tag" onclick="filterTag('physics')">Physics</span>
-        <span class="tag" onclick="filterTag('ai')">AI</span>
-        <span class="tag" onclick="filterTag('philosophy')">Philosophy</span>
-        <span class="tag" onclick="filterTag('math')">Math</span>
-    </div>
+    <!-- FILTERS -->
+    <div id="filterContainer"></div>
 
+    <!-- FILES -->
     <div id="fileList"></div>
 
 </div>
@@ -224,13 +327,23 @@ textarea {
 <div id="main">
 
     <div id="topbar">
-        <button onclick="toggleTheme()">Theme</button>
-        <button onclick="exportPDF()">Export PDF</button>
+
+        <button onclick="toggleTheme()">
+            Toggle Theme
+        </button>
+
+        <button onclick="exportPDF()">
+            Export PDF
+        </button>
+
     </div>
 
     <div id="content">
+
         <h1>Welcome</h1>
+
         <p>Select an essay from the sidebar.</p>
+
     </div>
 
 </div>
@@ -242,8 +355,11 @@ textarea {
 ========================================= */
 
 const repoUser = "RoshanatNiser";
+
 const repoName = "Essays";
+
 const branch = "main";
+
 const folder = "essays";
 
 /* =========================================
@@ -252,8 +368,12 @@ const folder = "essays";
 
 let markdownFiles = [];
 
+let filters = {};
+
+let currentFilter = null;
+
 /* =========================================
-   AUTO DETECT MARKDOWN FILES
+   FETCH MARKDOWN FILES
 ========================================= */
 
 async function fetchMarkdownFiles() {
@@ -262,6 +382,7 @@ async function fetchMarkdownFiles() {
 `https://api.github.com/repos/${repoUser}/${repoName}/contents/${folder}`;
 
     const response = await fetch(apiURL);
+
     const data = await response.json();
 
     markdownFiles = data.filter(file =>
@@ -272,26 +393,122 @@ async function fetchMarkdownFiles() {
 }
 
 /* =========================================
+   FETCH FILTERS
+========================================= */
+
+async function fetchFilters() {
+
+    try {
+
+        const response =
+            await fetch("filters.json");
+
+        filters = await response.json();
+
+        renderFilters();
+
+    } catch(error) {
+
+        console.log("No filters.json found");
+    }
+}
+
+/* =========================================
+   RENDER FILTERS
+========================================= */
+
+function renderFilters() {
+
+    const container =
+        document.getElementById("filterContainer");
+
+    container.innerHTML = "";
+
+    const filterNames =
+        Object.keys(filters);
+
+    if(filterNames.length === 0) return;
+
+    filterNames.forEach(filterName => {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "filter-btn";
+
+        button.innerText = filterName;
+
+        button.onclick = () =>
+            applyFilter(filterName);
+
+        container.appendChild(button);
+    });
+
+    const clearButton =
+        document.createElement("button");
+
+    clearButton.id = "clearFilter";
+
+    clearButton.innerText = "Remove Filter";
+
+    clearButton.onclick = clearFilter;
+
+    container.appendChild(clearButton);
+}
+
+/* =========================================
+   APPLY FILTER
+========================================= */
+
+function applyFilter(filterName) {
+
+    currentFilter = filterName;
+
+    const allowedFiles =
+        filters[filterName];
+
+    const filtered =
+        markdownFiles.filter(file =>
+            allowedFiles.includes(file.name)
+        );
+
+    renderFileList(filtered);
+}
+
+/* =========================================
+   CLEAR FILTER
+========================================= */
+
+function clearFilter() {
+
+    currentFilter = null;
+
+    renderFileList(markdownFiles);
+}
+
+/* =========================================
    RENDER FILE LIST
 ========================================= */
 
 function renderFileList(files) {
 
-    const fileList = document.getElementById("fileList");
+    const fileList =
+        document.getElementById("fileList");
 
     fileList.innerHTML = "";
 
     files.forEach(file => {
 
-        const div = document.createElement("div");
+        const div =
+            document.createElement("div");
 
         div.className = "file-card";
 
-        div.innerHTML = `
-            <strong>${file.name.replace(".md","")}</strong>
-        `;
+        div.innerHTML =
+            `<strong>${file.name.replace(".md","")}</strong>`;
 
-        div.onclick = () => loadMarkdown(file.name);
+        div.onclick = () =>
+            loadMarkdown(file.name);
 
         fileList.appendChild(div);
     });
@@ -319,7 +536,8 @@ async function loadMarkdown(filename) {
 
     loadComments(filename);
 
-    window.scrollTo(0,0);
+    document.getElementById("main")
+        .scrollTo(0,0);
 }
 
 /* =========================================
@@ -329,30 +547,33 @@ async function loadMarkdown(filename) {
 document.getElementById("search")
 .addEventListener("input", function() {
 
-    const value = this.value.toLowerCase();
+    const value =
+        this.value.toLowerCase();
 
-    const filtered = markdownFiles.filter(file =>
-        file.name.toLowerCase().includes(value)
-    );
+    let filesToSearch =
+        markdownFiles;
+
+    if(currentFilter) {
+
+        const allowedFiles =
+            filters[currentFilter];
+
+        filesToSearch =
+            markdownFiles.filter(file =>
+                allowedFiles.includes(file.name)
+            );
+    }
+
+    const filtered =
+        filesToSearch.filter(file =>
+            file.name.toLowerCase().includes(value)
+        );
 
     renderFileList(filtered);
 });
 
 /* =========================================
-   TAG FILTER
-========================================= */
-
-function filterTag(tag) {
-
-    const filtered = markdownFiles.filter(file =>
-        file.name.toLowerCase().includes(tag)
-    );
-
-    renderFileList(filtered);
-}
-
-/* =========================================
-   DARK / LIGHT
+   DARK / LIGHT MODE
 ========================================= */
 
 function toggleTheme() {
@@ -366,7 +587,8 @@ function toggleTheme() {
 
 function exportPDF() {
 
-    const element = document.getElementById("content");
+    const element =
+        document.getElementById("content");
 
     html2pdf().from(element).save();
 }
@@ -375,16 +597,18 @@ function exportPDF() {
    READING PROGRESS BAR
 ========================================= */
 
-window.addEventListener("scroll", () => {
+document.getElementById("main")
+.addEventListener("scroll", () => {
 
     let winScroll =
-        document.documentElement.scrollTop;
+        document.getElementById("main").scrollTop;
 
     let height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
+        document.getElementById("main").scrollHeight -
+        document.getElementById("main").clientHeight;
 
-    let scrolled = (winScroll / height) * 100;
+    let scrolled =
+        (winScroll / height) * 100;
 
     document.getElementById("progress-bar")
         .style.width = scrolled + "%";
@@ -396,27 +620,35 @@ window.addEventListener("scroll", () => {
 
 function loadComments(filename) {
 
-    const content = document.getElementById("content");
+    const content =
+        document.getElementById("content");
 
     let commentsHTML = `
+
         <div id="comments">
+
             <h2>Comments</h2>
 
-            <textarea id="commentInput"
-            placeholder="Write a comment..."></textarea>
+            <textarea
+                id="commentInput"
+                placeholder="Write a comment..."
+            ></textarea>
 
             <button onclick="saveComment('${filename}')">
                 Post Comment
             </button>
 
             <div id="commentList"></div>
+
         </div>
     `;
 
     content.innerHTML += commentsHTML;
 
     const comments =
-        JSON.parse(localStorage.getItem(filename) || "[]");
+        JSON.parse(
+            localStorage.getItem(filename) || "[]"
+        );
 
     const commentList =
         document.getElementById("commentList");
@@ -429,13 +661,19 @@ function loadComments(filename) {
     });
 }
 
+/* =========================================
+   SAVE COMMENT
+========================================= */
+
 function saveComment(filename) {
 
     const input =
         document.getElementById("commentInput");
 
     const comments =
-        JSON.parse(localStorage.getItem(filename) || "[]");
+        JSON.parse(
+            localStorage.getItem(filename) || "[]"
+        );
 
     comments.push(input.value);
 
@@ -453,7 +691,10 @@ function saveComment(filename) {
 
 fetchMarkdownFiles();
 
+fetchFilters();
+
 </script>
 
 </body>
+
 </html>
