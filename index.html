@@ -11,10 +11,9 @@
 <!-- MARKDOWN -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<!-- HIGHLIGHT -->
+<!-- SYNTAX HIGHLIGHT -->
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
 <!-- MATHJAX -->
@@ -22,334 +21,342 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-d
 window.MathJax = {
     tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+        fontCache: 'global'
     }
 };
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
 <style>
 
 :root {
-
-    --bg: #121212;
-    --card: #1f1f1f;
-    --text: #ffffff;
+    --bg:     #121212;
+    --card:   #1f1f1f;
+    --text:   #ffffff;
     --accent: #4da6ff;
+    --border: #333333;
 }
 
 .light {
-
-    --bg: #f5f5f5;
-    --card: #ffffff;
-    --text: #111111;
+    --bg:     #f5f5f5;
+    --card:   #ffffff;
+    --text:   #111111;
     --accent: #0066cc;
+    --border: #cccccc;
 }
 
 * {
-
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-html,
-body {
-
-    margin: 0;
-
-    width: 100%;
+html, body {
     height: 100%;
-
     overflow: hidden;
-
     font-family: Arial, sans-serif;
-
     background: var(--bg);
-
     color: var(--text);
 }
 
-/* LAYOUT */
+/* ── LAYOUT ── */
 
 #app {
-
     display: flex;
-
+    height: 100vh;
     width: 100%;
-    height: 100%;
+    overflow: hidden;
 }
 
-/* SIDEBAR */
+/* ── SIDEBAR ── */
 
 #sidebar {
-
-    width: 320px;
-
-    background: var(--card);
-
-    overflow-y: auto;
-
-    border-right: 1px solid #333;
-
-    padding: 20px;
-
+    width: 300px;
     flex-shrink: 0;
-
-    transition:
-        width 0.3s ease,
-        padding 0.3s ease,
-        opacity 0.3s ease;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s ease;
 }
 
 #sidebar.hidden {
-
     width: 0;
-
-    padding: 0;
-
-    opacity: 0;
-
-    overflow: hidden;
-
     border-right: none;
 }
 
-/* MAIN */
-
-#main {
-
-    flex: 1;
-
+#sidebar-inner {
+    width: 300px;           /* fixed so content doesn't squish while animating */
+    padding: 20px;
     display: flex;
-
     flex-direction: column;
-
-    overflow: hidden;
-
-    transition: all 0.3s ease;
-}
-
-/* TOPBAR */
-
-#topbar {
-
-    background: var(--card);
-
-    padding: 12px;
-
-    display: flex;
-
-    gap: 10px;
-
-    border-bottom: 1px solid #333;
-
-    flex-shrink: 0;
-}
-
-/* CONTENT */
-
-#content {
-
-    flex: 1;
-
+    gap: 12px;
     overflow-y: auto;
-
-    padding: 40px;
-
-    line-height: 1.8;
-
-    max-width: 1000px;
-
-    width: 100%;
-
-    margin: auto;
+    height: 100%;
 }
 
-/* SEARCH */
+#sidebar h2 {
+    font-size: 1.2rem;
+    white-space: nowrap;
+}
+
+/* ── SEARCH ── */
 
 #search {
-
     width: 100%;
-
     padding: 10px;
-
-    margin-bottom: 15px;
-
     border-radius: 8px;
-
-    border: none;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    font-size: 0.95rem;
 }
 
-/* BUTTON */
-
-button {
-
-    background: var(--accent);
-
-    color: white;
-
-    border: none;
-
-    padding: 10px 15px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-}
-
-/* FILE CARD */
-
-.file-card {
-
-    background: rgba(255,255,255,0.05);
-
-    padding: 12px;
-
-    margin-top: 12px;
-
-    border-radius: 10px;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-}
-
-.file-card:hover {
-
-    transform: scale(1.02);
-}
-
-/* FILTERS */
+/* ── FILTER BUTTONS ── */
 
 #filterContainer {
-
-    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .filter-btn {
-
-    display: inline-block;
-
-    margin: 5px;
-
-    padding: 8px 12px;
-
+    padding: 7px 12px;
     border-radius: 8px;
-
     background: var(--accent);
-
     color: white;
-
     border: none;
-
     cursor: pointer;
+    font-size: 0.85rem;
+    white-space: nowrap;
 }
 
-/* PDF BUTTON */
+.filter-btn.active {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+#clearFilter {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #666;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    display: none;           /* shown only when a filter is active */
+}
+
+/* ── FILE LIST ── */
+
+#fileList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.file-card {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 12px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+}
+
+.file-card:hover {
+    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.file-card.active {
+    background: var(--accent);
+    color: white;
+}
+
+/* ── MAIN PANEL ── */
+
+#main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── TOPBAR ── */
+
+#topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+#topbar button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+#topbar button:hover {
+    opacity: 0.85;
+}
 
 #downloadPDFBtn {
-
     display: none;
+    margin-left: auto;   /* push to the right */
 }
 
-/* CODE */
-
-pre {
-
-    padding: 15px;
-
-    border-radius: 10px;
-
-    overflow-x: auto;
-}
-
-/* IMAGES */
-
-img {
-
-    max-width: 100%;
-}
-
-/* PROGRESS */
+/* ── READING PROGRESS ── */
 
 #progress-container {
-
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-
-    height: 4px;
-
-    z-index: 9999;
+    height: 3px;
+    background: transparent;
+    flex-shrink: 0;
 }
 
 #progress-bar {
-
     height: 100%;
-
     width: 0%;
-
     background: var(--accent);
+    transition: width 0.1s linear;
+}
+
+/* ── CONTENT ── */
+
+#content-wrap {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* ── MARKDOWN STYLES ── */
+
+#content h1, #content h2, #content h3 {
+    margin-top: 1.6em;
+    margin-bottom: 0.4em;
+    line-height: 1.3;
+}
+
+#content p {
+    margin-bottom: 1em;
+}
+
+#content a {
+    color: var(--accent);
+}
+
+#content pre {
+    padding: 16px;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin-bottom: 1em;
+}
+
+#content code:not(pre code) {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+#content blockquote {
+    border-left: 4px solid var(--accent);
+    padding-left: 16px;
+    color: #aaa;
+    margin: 1em 0;
+}
+
+#content img {
+    max-width: 100%;
+    border-radius: 6px;
+}
+
+#content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+#content th, #content td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+#content th {
+    background: rgba(255,255,255,0.08);
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div id="progress-container">
-    <div id="progress-bar"></div>
-</div>
-
 <div id="app">
 
-    <!-- SIDEBAR -->
-
+    <!-- ── SIDEBAR ── -->
     <div id="sidebar">
+        <div id="sidebar-inner">
 
-        <h2>Essay Library</h2>
+            <h2>📚 Essay Library</h2>
 
-        <input
-            type="text"
-            id="search"
-            placeholder="Search essays..."
-        >
+            <input
+                type="text"
+                id="search"
+                placeholder="Search essays…"
+                autocomplete="off"
+            >
 
-        <div id="filterContainer"></div>
+            <div id="filterContainer"></div>
 
-        <div id="fileList"></div>
+            <div id="fileList">
+                <p style="opacity:0.5;font-size:0.85rem;">Loading…</p>
+            </div>
 
+        </div>
     </div>
 
-    <!-- MAIN -->
-
+    <!-- ── MAIN ── -->
     <div id="main">
 
         <div id="topbar">
-
-            <button onclick="toggleSidebar()">
-                ☰ Sidebar
-            </button>
-
-            <button onclick="toggleTheme()">
-                Toggle Theme
-            </button>
-
-            <button id="downloadPDFBtn">
-                Download PDF
-            </button>
-
+            <button onclick="toggleSidebar()" title="Toggle sidebar">☰ Sidebar</button>
+            <button onclick="toggleTheme()" title="Switch theme">🌗 Theme</button>
+            <button id="downloadPDFBtn" title="Download PDF">⬇ PDF</button>
         </div>
 
-        <div id="content">
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
 
-            <h1>Welcome</h1>
-
-            <p>Select an essay from the sidebar.</p>
-
+        <div id="content-wrap">
+            <div id="content">
+                <h1>Welcome</h1>
+                <p>Select an essay from the sidebar to start reading.</p>
+            </div>
         </div>
 
     </div>
@@ -358,269 +365,284 @@ img {
 
 <script>
 
-/* CONFIG */
+/* =========================================
+   CONFIG  — edit these to match your repo
+========================================= */
 
-const repoUser = "RoshanatNiser";
-
-const repoName = "Essays";
-
-const branch = "main";
-
-const folder = "essays";
-
+const repoUser  = "RoshanatNiser";
+const repoName  = "Essays";
+const branch    = "main";
+const folder    = "essays";
 const pdfFolder = "pdfs";
 
-/* GLOBALS */
+/* =========================================
+   GLOBALS
+========================================= */
 
 let markdownFiles = [];
-
-let filters = {};
-
+let filters       = {};
 let currentFilter = null;
+let currentFile   = null;
 
-/* FETCH MARKDOWN */
+/* =========================================
+   BOOT
+========================================= */
+
+fetchMarkdownFiles();
+fetchFilters();
+
+/* =========================================
+   FETCH MARKDOWN FILE LIST
+========================================= */
 
 async function fetchMarkdownFiles() {
 
-    const apiURL =
-`https://api.github.com/repos/${repoUser}/${repoName}/contents/${folder}`;
+    try {
 
-    const response = await fetch(apiURL);
+        const url  = `https://api.github.com/repos/${repoUser}/${repoName}/contents/${folder}`;
+        const res  = await fetch(url);
 
-    const data = await response.json();
+        if (!res.ok) throw new Error(`GitHub API ${res.status}`);
 
-    markdownFiles = data.filter(file =>
-        file.name.endsWith(".md")
-    );
+        const data = await res.json();
 
-    renderFileList(markdownFiles);
+        markdownFiles = data.filter(f => f.name.endsWith(".md"));
+
+        renderFileList(markdownFiles);
+
+    } catch (err) {
+
+        document.getElementById("fileList").innerHTML =
+            `<p style="color:#f66;font-size:0.85rem;">Could not load essays.<br>${err.message}</p>`;
+    }
 }
 
-/* FETCH FILTERS */
+/* =========================================
+   FETCH FILTERS  (filters.json, optional)
+========================================= */
 
 async function fetchFilters() {
 
     try {
 
-        const response =
-            await fetch("filters.json");
+        const res = await fetch("filters.json");
 
-        filters = await response.json();
+        if (!res.ok) return;
+
+        filters = await res.json();
 
         renderFilters();
 
-    } catch(error) {
-
-        console.log("No filters found");
+    } catch {
+        /* no filters.json — silently skip */
     }
 }
 
-/* RENDER FILTERS */
+/* =========================================
+   RENDER FILTER BUTTONS
+========================================= */
 
 function renderFilters() {
 
-    const container =
-        document.getElementById("filterContainer");
-
+    const container = document.getElementById("filterContainer");
     container.innerHTML = "";
 
-    const filterNames =
-        Object.keys(filters);
+    const names = Object.keys(filters);
+    if (names.length === 0) return;
 
-    filterNames.forEach(filterName => {
+    names.forEach(name => {
 
-        const button =
-            document.createElement("button");
-
-        button.className = "filter-btn";
-
-        button.innerText = filterName;
-
-        button.onclick = () =>
-            applyFilter(filterName);
-
-        container.appendChild(button);
+        const btn = document.createElement("button");
+        btn.className  = "filter-btn";
+        btn.textContent = name;
+        btn.onclick    = () => applyFilter(name, btn);
+        container.appendChild(btn);
     });
+
+    const clear = document.createElement("button");
+    clear.id          = "clearFilter";
+    clear.textContent = "✕ Clear";
+    clear.onclick     = clearFilter;
+    container.appendChild(clear);
 }
 
-/* APPLY FILTER */
+/* =========================================
+   APPLY / CLEAR FILTER
+========================================= */
 
-function applyFilter(filterName) {
+function applyFilter(name, btn) {
 
-    currentFilter = filterName;
+    currentFilter = name;
 
-    const allowedFiles =
-        filters[filterName];
+    /* highlight active button */
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("clearFilter").style.display = "inline-block";
 
-    const filtered =
-        markdownFiles.filter(file =>
-            allowedFiles.includes(file.name)
-        );
-
+    const allowed  = filters[name];
+    const filtered = markdownFiles.filter(f => allowed.includes(f.name));
     renderFileList(filtered);
 }
 
-/* RENDER FILE LIST */
+function clearFilter() {
+
+    currentFilter = null;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById("clearFilter").style.display = "none";
+    renderFileList(markdownFiles);
+}
+
+/* =========================================
+   RENDER FILE LIST
+========================================= */
 
 function renderFileList(files) {
 
-    const fileList =
-        document.getElementById("fileList");
+    const list = document.getElementById("fileList");
+    list.innerHTML = "";
 
-    fileList.innerHTML = "";
+    if (files.length === 0) {
+        list.innerHTML = `<p style="opacity:0.5;font-size:0.85rem;">No essays found.</p>`;
+        return;
+    }
 
     files.forEach(file => {
 
-        const div =
-            document.createElement("div");
-
-        div.className = "file-card";
-
-        div.innerHTML =
-            `<strong>${file.name.replace(".md","")}</strong>`;
-
-        div.onclick = () =>
-            loadMarkdown(file.name);
-
-        fileList.appendChild(div);
+        const card = document.createElement("div");
+        card.className   = "file-card";
+        card.textContent = file.name.replace(/\.md$/, "");
+        if (file.name === currentFile) card.classList.add("active");
+        card.onclick = () => loadMarkdown(file.name);
+        list.appendChild(card);
     });
 }
 
-/* LOAD MARKDOWN */
+/* =========================================
+   LOAD MARKDOWN
+========================================= */
 
 async function loadMarkdown(filename) {
 
-    const rawURL =
-`https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${folder}/${filename}`;
+    currentFile = filename;
 
-    const response = await fetch(rawURL);
+    /* highlight selected card */
+    document.querySelectorAll(".file-card").forEach(c => {
+        c.classList.toggle("active", c.textContent === filename.replace(/\.md$/, ""));
+    });
 
-    const markdown = await response.text();
+    const url = `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${folder}/${filename}`;
 
-    document.getElementById("content").innerHTML =
-        marked.parse(markdown);
-
-    hljs.highlightAll();
-
-    MathJax.typeset();
-
-    checkPDFExists(filename);
-
-    document.getElementById("content")
-        .scrollTo(0,0);
-}
-
-/* CHECK PDF */
-
-async function checkPDFExists(filename) {
-
-    const pdfFile =
-        filename.replace(".md",".pdf");
-
-    const pdfURL =
-`https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${pdfFolder}/${pdfFile}`;
+    const content = document.getElementById("content");
+    content.innerHTML = `<p style="opacity:0.5;">Loading…</p>`;
 
     try {
 
-        const response =
-            await fetch(pdfURL, {
-                method: "HEAD"
-            });
+        const res      = await fetch(url);
+        const markdown = await res.text();
 
-        const button =
-            document.getElementById("downloadPDFBtn");
+        content.innerHTML = marked.parse(markdown);
 
-        if(response.ok) {
+        /* syntax highlight */
+        content.querySelectorAll("pre code").forEach(block => {
+            hljs.highlightElement(block);
+        });
 
-            button.style.display = "inline-block";
+        /* math */
+        MathJax.typesetPromise([content]).catch(console.error);
 
-            button.onclick = () => {
+    } catch (err) {
 
-                window.open(pdfURL, "_blank");
-            };
+        content.innerHTML = `<p style="color:#f66;">Failed to load essay.<br>${err.message}</p>`;
+    }
+
+    /* scroll to top */
+    document.getElementById("content-wrap").scrollTop = 0;
+    document.getElementById("progress-bar").style.width = "0%";
+
+    checkPDFExists(filename);
+}
+
+/* =========================================
+   CHECK IF PDF EXISTS
+========================================= */
+
+async function checkPDFExists(filename) {
+
+    const pdfFile = filename.replace(/\.md$/, ".pdf");
+    const pdfURL  = `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${pdfFolder}/${pdfFile}`;
+
+    const btn = document.getElementById("downloadPDFBtn");
+
+    try {
+
+        const res = await fetch(pdfURL, { method: "HEAD" });
+
+        if (res.ok) {
+
+            btn.style.display = "inline-block";
+            btn.onclick = () => window.open(pdfURL, "_blank");
 
         } else {
 
-            button.style.display = "none";
+            btn.style.display = "none";
         }
 
     } catch {
 
-        document.getElementById("downloadPDFBtn")
-            .style.display = "none";
+        btn.style.display = "none";
     }
 }
 
-/* SEARCH */
+/* =========================================
+   SEARCH
+========================================= */
 
-document.getElementById("search")
-.addEventListener("input", function() {
+document.getElementById("search").addEventListener("input", function () {
 
-    const value =
-        this.value.toLowerCase();
+    const query = this.value.toLowerCase().trim();
 
-    let files =
-        markdownFiles;
+    let pool = markdownFiles;
 
-    if(currentFilter) {
-
-        const allowed =
-            filters[currentFilter];
-
-        files =
-            markdownFiles.filter(file =>
-                allowed.includes(file.name)
-            );
+    if (currentFilter) {
+        const allowed = filters[currentFilter];
+        pool = markdownFiles.filter(f => allowed.includes(f.name));
     }
 
-    const filtered =
-        files.filter(file =>
-            file.name.toLowerCase().includes(value)
-        );
+    const results = query
+        ? pool.filter(f => f.name.toLowerCase().includes(query))
+        : pool;
 
-    renderFileList(filtered);
+    renderFileList(results);
 });
 
-/* TOGGLE SIDEBAR */
+/* =========================================
+   TOGGLE SIDEBAR
+========================================= */
 
 function toggleSidebar() {
-
-    document.getElementById("sidebar")
-        .classList.toggle("hidden");
+    document.getElementById("sidebar").classList.toggle("hidden");
 }
 
-/* THEME */
+/* =========================================
+   TOGGLE THEME
+========================================= */
 
 function toggleTheme() {
-
     document.body.classList.toggle("light");
 }
 
-/* PROGRESS BAR */
+/* =========================================
+   READING PROGRESS BAR
+========================================= */
 
-document.getElementById("content")
-.addEventListener("scroll", () => {
+document.getElementById("content-wrap").addEventListener("scroll", function () {
 
-    let content =
-        document.getElementById("content");
+    const el      = this;
+    const scrolled = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
 
-    let scrolled =
-        (content.scrollTop /
-        (content.scrollHeight - content.clientHeight))
-        * 100;
-
-    document.getElementById("progress-bar")
-        .style.width = scrolled + "%";
+    document.getElementById("progress-bar").style.width = scrolled + "%";
 });
 
-/* START */
-
-fetchMarkdownFiles();
-
-fetchFilters();
-
 </script>
-
 </body>
-
 </html>
