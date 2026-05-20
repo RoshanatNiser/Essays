@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essay Repository</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: #1e1e1e;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-title {
+            padding: 15px;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Essay Collection</h1>
+
+    <div class="container">
+
+        <a class="card" href="viewer.html?file=philosophy.md">
+            <img src="images/philosophy.jpg">
+            <div class="card-title">Philosophy</div>
+        </a>
+
+        <a class="card" href="viewer.html?file=ai.md">
+            <img src="images/ai.jpg">
+            <div class="card-title">Artificial Intelligence</div>
+        </a>
+
+        <a class="card" href="viewer.html?file=cosmology.md">
+            <img src="images/cosmology.jpg">
+            <div class="card-title">Cosmology</div>
+        </a>
+
+    </div>
+
+</body>
+</html>
