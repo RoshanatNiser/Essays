@@ -5,7 +5,6 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Essay Library</title>
 
 <!-- MARKDOWN -->
@@ -19,12 +18,8 @@
 <!-- MATHJAX -->
 <script>
 window.MathJax = {
-    tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
-    },
-    svg: {
-        fontCache: 'global'
-    }
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -47,11 +42,7 @@ window.MathJax = {
     --border: #cccccc;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
     height: 100%;
@@ -62,7 +53,6 @@ html, body {
 }
 
 /* ── LAYOUT ── */
-
 #app {
     display: flex;
     height: 100vh;
@@ -71,7 +61,6 @@ html, body {
 }
 
 /* ── SIDEBAR ── */
-
 #sidebar {
     width: 300px;
     flex-shrink: 0;
@@ -89,7 +78,7 @@ html, body {
 }
 
 #sidebar-inner {
-    width: 300px;           /* fixed so content doesn't squish while animating */
+    width: 300px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -104,7 +93,6 @@ html, body {
 }
 
 /* ── SEARCH ── */
-
 #search {
     width: 100%;
     padding: 10px;
@@ -117,14 +105,13 @@ html, body {
 }
 
 /* ── FILTER BUTTONS ── */
-
 #filterContainer {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 }
 
-/* Ghost style — border only; fills when active */
+/* Ghost pill — border only; fills solid when active */
 .filter-btn {
     padding: 6px 13px;
     border-radius: 20px;
@@ -149,7 +136,7 @@ html, body {
     color: #fff;
 }
 
-/* Clear All — appears as a muted pill */
+/* Clear All — muted, appears only when a filter is active */
 #clearFilter {
     padding: 6px 13px;
     border-radius: 20px;
@@ -161,7 +148,7 @@ html, body {
     font-weight: 600;
     white-space: nowrap;
     transition: background 0.15s, color 0.15s, border-color 0.15s;
-    display: none;           /* shown only when ≥1 filter is active */
+    display: none;
 }
 
 #clearFilter:hover {
@@ -171,7 +158,6 @@ html, body {
 }
 
 /* ── FILE LIST ── */
-
 #fileList {
     display: flex;
     flex-direction: column;
@@ -179,29 +165,28 @@ html, body {
 }
 
 .file-card {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255,255,255,0.06);
     padding: 12px 14px;
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.15s, background 0.15s;
-    white-space: nowrap;
+    font-size: 0.9rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .file-card:hover {
     transform: scale(1.02);
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255,255,255,0.12);
 }
 
 .file-card.active {
     background: var(--accent);
-    color: white;
+    color: #fff;
 }
 
 /* ── MAIN PANEL ── */
-
 #main {
     flex: 1;
     display: flex;
@@ -210,7 +195,6 @@ html, body {
 }
 
 /* ── TOPBAR ── */
-
 #topbar {
     background: var(--card);
     border-bottom: 1px solid var(--border);
@@ -231,17 +215,14 @@ html, body {
     font-size: 0.9rem;
 }
 
-#topbar button:hover {
-    opacity: 0.85;
-}
+#topbar button:hover { opacity: 0.85; }
 
 #downloadPDFBtn {
     display: none;
-    margin-left: auto;   /* push to the right */
+    margin-left: auto;
 }
 
-/* ── READING PROGRESS ── */
-
+/* ── PROGRESS ── */
 #progress-container {
     height: 3px;
     background: transparent;
@@ -256,7 +237,6 @@ html, body {
 }
 
 /* ── CONTENT ── */
-
 #content-wrap {
     flex: 1;
     overflow-y: auto;
@@ -271,68 +251,39 @@ html, body {
 }
 
 /* ── MARKDOWN STYLES ── */
-
 #content h1, #content h2, #content h3 {
     margin-top: 1.6em;
     margin-bottom: 0.4em;
     line-height: 1.3;
 }
-
-#content p {
-    margin-bottom: 1em;
-}
-
-#content a {
-    color: var(--accent);
-}
-
-#content pre {
-    padding: 16px;
-    border-radius: 10px;
-    overflow-x: auto;
-    margin-bottom: 1em;
-}
-
+#content p    { margin-bottom: 1em; }
+#content a    { color: var(--accent); }
+#content pre  { padding: 16px; border-radius: 10px; overflow-x: auto; margin-bottom: 1em; }
 #content code:not(pre code) {
     background: rgba(255,255,255,0.1);
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.9em;
 }
-
 #content blockquote {
     border-left: 4px solid var(--accent);
     padding-left: 16px;
     color: #aaa;
     margin: 1em 0;
 }
-
-#content img {
-    max-width: 100%;
-    border-radius: 6px;
-}
-
-#content table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 1em;
-}
-
+#content img   { max-width: 100%; border-radius: 6px; }
+#content table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
 #content th, #content td {
     border: 1px solid var(--border);
     padding: 8px 12px;
     text-align: left;
 }
-
-#content th {
-    background: rgba(255,255,255,0.08);
-}
+#content th { background: rgba(255,255,255,0.08); }
 
 </style>
 </head>
 
 <body>
-
 <div id="app">
 
     <!-- ── SIDEBAR ── -->
@@ -378,13 +329,12 @@ html, body {
         </div>
 
     </div>
-
 </div>
 
 <script>
 
 /* =========================================
-   CONFIG  — edit these to match your repo
+   CONFIG
 ========================================= */
 
 const repoUser  = "RoshanatNiser";
@@ -397,9 +347,9 @@ const pdfFolder = "pdfs";
    GLOBALS
 ========================================= */
 
-let markdownFiles = [];
-let filters       = {};
-let activeFilters = new Set();   /* multi-select: stores active filter names */
+let markdownFiles = [];   /* all .md files from GitHub API */
+let filters       = {};   /* { CategoryName: ["file1.md", ...] } */
+let activeFilters = new Set();   /* currently toggled-on filter names */
 let currentFile   = null;
 
 /* =========================================
@@ -410,15 +360,15 @@ fetchMarkdownFiles();
 fetchFilters();
 
 /* =========================================
-   FETCH MARKDOWN FILE LIST
+   FETCH MARKDOWN FILE LIST  (GitHub API)
 ========================================= */
 
 async function fetchMarkdownFiles() {
 
     try {
 
-        const url  = `https://api.github.com/repos/${repoUser}/${repoName}/contents/${folder}`;
-        const res  = await fetch(url);
+        const url = `https://api.github.com/repos/${repoUser}/${repoName}/contents/${folder}`;
+        const res = await fetch(url);
 
         if (!res.ok) throw new Error(`GitHub API ${res.status}`);
 
@@ -436,18 +386,31 @@ async function fetchMarkdownFiles() {
 }
 
 /* =========================================
-   FETCH FILTERS  (filters.json, optional)
+   FETCH FILTERS  (raw GitHub URL — works on GitHub Pages)
+   Also normalises fancy/curly quotes to straight ones so
+   filenames match what the GitHub API returns.
 ========================================= */
 
 async function fetchFilters() {
 
     try {
 
-        const res = await fetch("filters.json");
+        const url = `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/filters.json`;
+        const res = await fetch(url);
 
         if (!res.ok) return;
 
-        filters = await res.json();
+        const raw = await res.json();
+
+        /* Normalise curly apostrophes/quotes that may be in filters.json
+           but won't match the straight-quote filenames from the API */
+        filters = {};
+        for (const [category, files] of Object.entries(raw)) {
+            filters[category] = files.map(f =>
+                f.replace(/[\u2018\u2019\u02BC]/g, "'")   /* ' ' ʼ → ' */
+                 .replace(/[\u201C\u201D]/g, '"')          /* " " → " */
+            );
+        }
 
         renderFilters();
 
@@ -471,10 +434,10 @@ function renderFilters() {
     names.forEach(name => {
 
         const btn = document.createElement("button");
-        btn.className   = "filter-btn";
-        btn.textContent = name;
+        btn.className      = "filter-btn";
+        btn.textContent    = name;
         btn.dataset.filter = name;
-        btn.onclick = () => toggleFilter(name);
+        btn.onclick        = () => toggleFilter(name);
         container.appendChild(btn);
     });
 
@@ -486,7 +449,7 @@ function renderFilters() {
 }
 
 /* =========================================
-   TOGGLE / CLEAR FILTERS  (multi-select)
+   TOGGLE A FILTER  (multi-select)
 ========================================= */
 
 function toggleFilter(name) {
@@ -497,17 +460,21 @@ function toggleFilter(name) {
         activeFilters.add(name);
     }
 
-    /* sync button states */
+    /* sync button highlight states */
     document.querySelectorAll(".filter-btn").forEach(btn => {
         btn.classList.toggle("active", activeFilters.has(btn.dataset.filter));
     });
 
-    /* show/hide Clear All */
+    /* show Clear All only when at least one filter is on */
     document.getElementById("clearFilter").style.display =
         activeFilters.size > 0 ? "inline-block" : "none";
 
-    applyActiveFilters();
+    applyFiltersAndSearch();
 }
+
+/* =========================================
+   CLEAR ALL FILTERS
+========================================= */
 
 function clearAllFilters() {
 
@@ -516,11 +483,16 @@ function clearAllFilters() {
     document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     document.getElementById("clearFilter").style.display = "none";
 
-    applyActiveFilters();
+    applyFiltersAndSearch();
 }
 
-/* Union of all selected filters, then apply search query on top */
-function applyActiveFilters() {
+/* =========================================
+   APPLY FILTERS + SEARCH QUERY TOGETHER
+   Union logic: a file is shown if it belongs
+   to ANY of the active filters.
+========================================= */
+
+function applyFiltersAndSearch() {
 
     let pool;
 
@@ -530,16 +502,19 @@ function applyActiveFilters() {
 
     } else {
 
-        /* union: include a file if ANY active filter allows it */
+        /* build union of all filenames allowed by active filters */
         const allowed = new Set(
-            [...activeFilters].flatMap(name => filters[name])
+            [...activeFilters].flatMap(name => filters[name] || [])
         );
+
         pool = markdownFiles.filter(f => allowed.has(f.name));
     }
 
-    /* also respect current search query */
+    /* further narrow by search query */
     const query = document.getElementById("search").value.toLowerCase().trim();
-    const results = query ? pool.filter(f => f.name.toLowerCase().includes(query)) : pool;
+    const results = query
+        ? pool.filter(f => f.name.toLowerCase().includes(query))
+        : pool;
 
     renderFileList(results);
 }
@@ -582,9 +557,9 @@ async function loadMarkdown(filename) {
         c.classList.toggle("active", c.textContent === filename.replace(/\.md$/, ""));
     });
 
-    const url = `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${folder}/${filename}`;
-
+    const url     = `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${folder}/${filename}`;
     const content = document.getElementById("content");
+
     content.innerHTML = `<p style="opacity:0.5;">Loading…</p>`;
 
     try {
@@ -594,12 +569,10 @@ async function loadMarkdown(filename) {
 
         content.innerHTML = marked.parse(markdown);
 
-        /* syntax highlight */
         content.querySelectorAll("pre code").forEach(block => {
             hljs.highlightElement(block);
         });
 
-        /* math */
         MathJax.typesetPromise([content]).catch(console.error);
 
     } catch (err) {
@@ -607,7 +580,6 @@ async function loadMarkdown(filename) {
         content.innerHTML = `<p style="color:#f66;">Failed to load essay.<br>${err.message}</p>`;
     }
 
-    /* scroll to top */
     document.getElementById("content-wrap").scrollTop = 0;
     document.getElementById("progress-bar").style.width = "0%";
 
@@ -622,20 +594,16 @@ async function checkPDFExists(filename) {
 
     const pdfFile = filename.replace(/\.md$/, ".pdf");
     const pdfURL  = `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${pdfFolder}/${pdfFile}`;
-
-    const btn = document.getElementById("downloadPDFBtn");
+    const btn     = document.getElementById("downloadPDFBtn");
 
     try {
 
         const res = await fetch(pdfURL, { method: "HEAD" });
 
         if (res.ok) {
-
             btn.style.display = "inline-block";
             btn.onclick = () => window.open(pdfURL, "_blank");
-
         } else {
-
             btn.style.display = "none";
         }
 
@@ -650,12 +618,11 @@ async function checkPDFExists(filename) {
 ========================================= */
 
 document.getElementById("search").addEventListener("input", function () {
-
-    applyActiveFilters();   /* handles both filter + search query together */
+    applyFiltersAndSearch();
 });
 
 /* =========================================
-   TOGGLE SIDEBAR
+   SIDEBAR TOGGLE
 ========================================= */
 
 function toggleSidebar() {
@@ -663,7 +630,7 @@ function toggleSidebar() {
 }
 
 /* =========================================
-   TOGGLE THEME
+   THEME TOGGLE
 ========================================= */
 
 function toggleTheme() {
@@ -675,10 +642,8 @@ function toggleTheme() {
 ========================================= */
 
 document.getElementById("content-wrap").addEventListener("scroll", function () {
-
     const el      = this;
     const scrolled = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
-
     document.getElementById("progress-bar").style.width = scrolled + "%";
 });
 
