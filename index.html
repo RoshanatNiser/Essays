@@ -124,32 +124,50 @@ html, body {
     gap: 6px;
 }
 
+/* Ghost style — border only; fills when active */
 .filter-btn {
-    padding: 7px 12px;
-    border-radius: 8px;
-    background: var(--accent);
-    color: white;
-    border: none;
+    padding: 6px 13px;
+    border-radius: 20px;
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
     white-space: nowrap;
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+    user-select: none;
+}
+
+.filter-btn:hover {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    transform: translateY(-1px);
 }
 
 .filter-btn.active {
-    outline: 2px solid white;
-    outline-offset: 2px;
+    background: var(--accent);
+    color: #fff;
 }
 
+/* Clear All — appears as a muted pill */
 #clearFilter {
-    padding: 7px 12px;
-    border-radius: 8px;
-    background: #666;
-    color: white;
-    border: none;
+    padding: 6px 13px;
+    border-radius: 20px;
+    background: transparent;
+    color: #888;
+    border: 1.5px solid #555;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
     white-space: nowrap;
-    display: none;           /* shown only when a filter is active */
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    display: none;           /* shown only when ≥1 filter is active */
+}
+
+#clearFilter:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    border-color: #888;
 }
 
 /* ── FILE LIST ── */
@@ -381,7 +399,7 @@ const pdfFolder = "pdfs";
 
 let markdownFiles = [];
 let filters       = {};
-let currentFilter = null;
+let activeFilters = new Set();   /* multi-select: stores active filter names */
 let currentFile   = null;
 
 /* =========================================
@@ -453,43 +471,77 @@ function renderFilters() {
     names.forEach(name => {
 
         const btn = document.createElement("button");
-        btn.className  = "filter-btn";
+        btn.className   = "filter-btn";
         btn.textContent = name;
-        btn.onclick    = () => applyFilter(name, btn);
+        btn.dataset.filter = name;
+        btn.onclick = () => toggleFilter(name);
         container.appendChild(btn);
     });
 
     const clear = document.createElement("button");
     clear.id          = "clearFilter";
-    clear.textContent = "✕ Clear";
-    clear.onclick     = clearFilter;
+    clear.textContent = "✕ Clear All";
+    clear.onclick     = clearAllFilters;
     container.appendChild(clear);
 }
 
 /* =========================================
-   APPLY / CLEAR FILTER
+   TOGGLE / CLEAR FILTERS  (multi-select)
 ========================================= */
 
-function applyFilter(name, btn) {
+function toggleFilter(name) {
 
-    currentFilter = name;
+    if (activeFilters.has(name)) {
+        activeFilters.delete(name);
+    } else {
+        activeFilters.add(name);
+    }
 
-    /* highlight active button */
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById("clearFilter").style.display = "inline-block";
+    /* sync button states */
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", activeFilters.has(btn.dataset.filter));
+    });
 
-    const allowed  = filters[name];
-    const filtered = markdownFiles.filter(f => allowed.includes(f.name));
-    renderFileList(filtered);
+    /* show/hide Clear All */
+    document.getElementById("clearFilter").style.display =
+        activeFilters.size > 0 ? "inline-block" : "none";
+
+    applyActiveFilters();
 }
 
-function clearFilter() {
+function clearAllFilters() {
 
-    currentFilter = null;
+    activeFilters.clear();
+
     document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     document.getElementById("clearFilter").style.display = "none";
-    renderFileList(markdownFiles);
+
+    applyActiveFilters();
+}
+
+/* Union of all selected filters, then apply search query on top */
+function applyActiveFilters() {
+
+    let pool;
+
+    if (activeFilters.size === 0) {
+
+        pool = markdownFiles;
+
+    } else {
+
+        /* union: include a file if ANY active filter allows it */
+        const allowed = new Set(
+            [...activeFilters].flatMap(name => filters[name])
+        );
+        pool = markdownFiles.filter(f => allowed.has(f.name));
+    }
+
+    /* also respect current search query */
+    const query = document.getElementById("search").value.toLowerCase().trim();
+    const results = query ? pool.filter(f => f.name.toLowerCase().includes(query)) : pool;
+
+    renderFileList(results);
 }
 
 /* =========================================
@@ -599,20 +651,7 @@ async function checkPDFExists(filename) {
 
 document.getElementById("search").addEventListener("input", function () {
 
-    const query = this.value.toLowerCase().trim();
-
-    let pool = markdownFiles;
-
-    if (currentFilter) {
-        const allowed = filters[currentFilter];
-        pool = markdownFiles.filter(f => allowed.includes(f.name));
-    }
-
-    const results = query
-        ? pool.filter(f => f.name.toLowerCase().includes(query))
-        : pool;
-
-    renderFileList(results);
+    applyActiveFilters();   /* handles both filter + search query together */
 });
 
 /* =========================================
